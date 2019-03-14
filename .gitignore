@@ -1,0 +1,9 @@
+
+\.idea/
+
+packages/
+
+*/bin/
+*/obj/
+
+*.user
