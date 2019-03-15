@@ -2,7 +2,7 @@ namespace NPG.States
 {
 	public abstract class PayloadState<TPayload> : State where TPayload : class
 	{
-		private TPayload _tmpPayload;
+		protected TPayload Payload { get; private set; }
 		
 		protected PayloadState(StateMachine stateMachine) : base(stateMachine)
 		{
@@ -10,19 +10,19 @@ namespace NPG.States
 		
 		public void Enter(TPayload payload)
 		{
-			_tmpPayload = payload;
+			Payload = payload;
 			Enter();
 		}
 		
 		internal override void InternalEnter()
 		{
-			OnEnter(_tmpPayload);
+			OnEnter(Payload);
 		}
 
 		internal override void InternalExit()
 		{
-			_tmpPayload = null;
 			base.InternalExit();
+			Payload = null;
 		}
 
 		protected abstract void OnEnter(TPayload payload);

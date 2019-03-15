@@ -1,6 +1,6 @@
 namespace NPG.States
 {
-	public abstract class State : IState
+	public abstract class State
 	{
 		private readonly StateMachine _stateMachine;
 
