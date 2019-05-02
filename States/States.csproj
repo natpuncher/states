@@ -7,8 +7,8 @@
     <ProjectGuid>{AACECE31-7683-45FD-BBC5-1F82AB816B73}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>states</RootNamespace>
-    <AssemblyName>states</AssemblyName>
+    <RootNamespace>NPG.States</RootNamespace>
+    <AssemblyName>NPG.States</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

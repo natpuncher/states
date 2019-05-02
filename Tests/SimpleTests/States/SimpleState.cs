@@ -1,5 +1,4 @@
 using System;
-using NPG.States;
 
 namespace NPG.States.Test
 {

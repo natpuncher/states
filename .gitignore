@@ -7,3 +7,5 @@ packages/
 */obj/
 
 *.user
+
+\.DS_Store
