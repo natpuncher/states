@@ -32,9 +32,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="NPG.States\AbstractState.cs" />
-    <Compile Include="NPG.States\PayloadState.cs" />
-    <Compile Include="NPG.States\State.cs" />
+    <Compile Include="NPG.States\IPayloadedState.cs" />
+    <Compile Include="NPG.States\IExitState.cs" />
+    <Compile Include="NPG.States\IStateFactory.cs" />
+    <Compile Include="NPG.States\IState.cs" />
     <Compile Include="NPG.States\StateMachine.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

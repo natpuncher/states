@@ -1,15 +1,28 @@
 namespace NPG.States
 {
-	public class StateMachine
+	public abstract class StateMachine
 	{
-		public AbstractState CurrentState { get; private set; }
+		protected abstract IStateFactory Factory { get; }
 
-		public void ChangeState(AbstractState abstractState)
+		private IExitState _currentExitState;
+
+		public void Enter<TState>() where TState : IState
 		{
-			CurrentState?.InternalExit();
+			_currentExitState?.OnExit();
+			
+			var state = Factory.GetState<TState>();
+			state.OnEnter();
+		}
+		
+		public void Enter<TState, TPayload>(TPayload payload) where TState : IPayloadedState<TPayload>
+		{
+			var state = Factory.GetState<TState>();
+			state.OnEnter(payload);
+		}
 
-			CurrentState = abstractState;
-			abstractState.InternalEnter();
+		public bool IsActive(IExitState state)
+		{
+			return state == _currentExitState;
 		}
 	}
 }
