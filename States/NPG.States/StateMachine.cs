@@ -9,24 +9,26 @@ namespace NPG.States
 		private IExitState _currentExitState;
 		private Type _currentType;
 
-		public void Enter<TState>() where TState : class, IState
+		public TState Enter<TState>() where TState : class, IState, new()
 		{
 			if (!ChangeState(out TState state))
 			{
-				return;
+				return null;
 			}
 
 			state.OnEnter();
+			return state;
 		}
 
-		public void Enter<TState, TPayload>(TPayload payload) where TState : class, IPayloadedState<TPayload>
+		public TState Enter<TState, TPayload>(TPayload payload) where TState : class, IPayloadedState<TPayload>, new()
 		{
 			if (!ChangeState(out TState state))
 			{
-				return;
+				return null;
 			}
 			
 			state.OnEnter(payload);
+			return state;
 		}
 
 		public bool IsActive(IExitState state)
@@ -39,10 +41,10 @@ namespace NPG.States
 			return _currentType == stateType;
 		}
 
-		private bool ChangeState<TState>(out TState state) where TState : class, IExitState
+		private bool ChangeState<TState>(out TState state) where TState : class, IExitState, new()
 		{
 			var type = typeof(TState);
-			if (_currentType == type)
+			if (IsActive(type))
 			{
 				state = null;
 				return false;
