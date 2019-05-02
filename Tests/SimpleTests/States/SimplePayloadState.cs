@@ -15,7 +15,7 @@ namespace NPG.States.Test
 		}
 	}
 	
-	public class SimplePayloadState : PayloadState<SimplePayload>
+	public class SimplePayloadState : PayloadState<SimplePayload, StateMachine>
 	{
 		public string SelectedCharacterName { get; private set; }
 		public int SelectedCharacterLevel { get; private set; }

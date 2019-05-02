@@ -1,19 +1,21 @@
 namespace NPG.States
 {
-	public abstract class PayloadState<TPayload> : State where TPayload : class
+	public abstract class PayloadState<TPayload, TStateMachine> : State<TStateMachine> 
+		where TPayload : class
+		where TStateMachine : StateMachine
 	{
 		protected TPayload Payload { get; private set; }
-		
-		protected PayloadState(StateMachine stateMachine) : base(stateMachine)
+
+		protected PayloadState(TStateMachine stateMachine) : base(stateMachine)
 		{
 		}
-		
+
 		public void Enter(TPayload payload)
 		{
 			Payload = payload;
 			Enter();
 		}
-		
+
 		internal override void InternalEnter()
 		{
 			OnEnter(Payload);
@@ -26,6 +28,7 @@ namespace NPG.States
 		}
 
 		protected abstract void OnEnter(TPayload payload);
+
 		protected sealed override void OnEnter()
 		{
 		}

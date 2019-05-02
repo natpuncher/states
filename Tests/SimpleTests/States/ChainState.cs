@@ -2,7 +2,7 @@ using System;
 
 namespace NPG.States.Test
 {
-	public class ChainState : PayloadState<SimplePayload>
+	public class ChainState : PayloadState<SimplePayload, StateMachine>
 	{
 		private readonly ChainState _nextState;
 

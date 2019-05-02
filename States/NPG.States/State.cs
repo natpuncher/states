@@ -1,10 +1,10 @@
 namespace NPG.States
 {
-	public abstract class State
+	public abstract class State<TStateMachine> : AbstractState where TStateMachine : StateMachine
 	{
 		private readonly StateMachine _stateMachine;
 
-		protected State(StateMachine stateMachine)
+		protected State(TStateMachine stateMachine)
 		{
 			_stateMachine = stateMachine;
 		}
@@ -17,12 +17,12 @@ namespace NPG.States
 		protected abstract void OnEnter();
 		protected abstract void OnExit();
 
-		internal virtual void InternalEnter()
+		internal override void InternalEnter()
 		{
 			OnEnter();
 		}
 
-		internal virtual void InternalExit()
+		internal override void InternalExit()
 		{
 			OnExit();
 		}

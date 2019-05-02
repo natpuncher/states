@@ -32,6 +32,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="NPG.States\AbstractState.cs" />
     <Compile Include="NPG.States\PayloadState.cs" />
     <Compile Include="NPG.States\State.cs" />
     <Compile Include="NPG.States\StateMachine.cs" />

@@ -3,7 +3,7 @@ using NPG.States;
 
 namespace NPG.States.Test
 {
-	public class SimpleState : State
+	public class SimpleState : State<StateMachine>
 	{
 		public SimpleState(StateMachine stateMachine) : base(stateMachine)
 		{
