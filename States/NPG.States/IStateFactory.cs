@@ -2,6 +2,6 @@ namespace NPG.States
 {
 	public interface IStateFactory
 	{
-		T GetState<T>() where T : IExitState, new();
+		T GetState<T>() where T : class, IExitState;
 	}
 }
