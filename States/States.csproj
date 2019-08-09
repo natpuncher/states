@@ -36,6 +36,7 @@
     <Compile Include="NPG.States\IExitState.cs" />
     <Compile Include="NPG.States\IStateFactory.cs" />
     <Compile Include="NPG.States\IState.cs" />
+    <Compile Include="NPG.States\IUpdatable.cs" />
     <Compile Include="NPG.States\StateMachine.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,8 +1,9 @@
+using System;
 using NPG.States;
 
 namespace Tests
 {
-	public class ExampleState : IState
+	public class ExampleState : IState, IUpdatable
 	{
 		public void OnExit()
 		{
@@ -10,6 +11,11 @@ namespace Tests
 
 		public void OnEnter()
 		{
+		}
+
+		public void Update()
+		{
+			Console.WriteLine("ExampleState.Update");
 		}
 	}
 }

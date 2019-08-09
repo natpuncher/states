@@ -6,6 +6,7 @@ namespace NPG.States
 	{
 		protected abstract IStateFactory Factory { get; }
 
+		private IUpdatable _currentUpdatableState;
 		private IExitState _currentExitState;
 		private Type _currentType;
 
@@ -26,7 +27,7 @@ namespace NPG.States
 			{
 				return null;
 			}
-			
+
 			state.OnEnter(payload);
 			return state;
 		}
@@ -41,6 +42,15 @@ namespace NPG.States
 			return _currentType == stateType;
 		}
 
+		public void Update()
+		{
+			_currentUpdatableState?.Update();
+		}
+		
+		protected virtual void StateChanged(IExitState oldState, IExitState newState)
+		{
+		}
+
 		private bool ChangeState<TState>(out TState state) where TState : class, IExitState
 		{
 			var type = typeof(TState);
@@ -51,8 +61,13 @@ namespace NPG.States
 			}
 
 			_currentExitState?.OnExit();
-
+			
 			state = Factory.GetState<TState>();
+			
+			_currentUpdatableState = state as IUpdatable;
+
+			StateChanged(_currentExitState, state);
+
 			_currentExitState = state;
 			_currentType = type;
 			return true;
