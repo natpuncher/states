@@ -1,7 +1,7 @@
 namespace NPG.States
 {
-	public interface IPayloadedState<TPayload> : IExitState
+	public interface IPayloadedState<TPayload> : IExitable
 	{
-		void OnEnter(TPayload payload);
+		void Enter(TPayload payload);
 	}
 }

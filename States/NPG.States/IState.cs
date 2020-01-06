@@ -1,7 +1,7 @@
 namespace NPG.States
 {
-	public interface IState : IExitState
+	public interface IState : IExitable
 	{
-		void OnEnter();
+		void Enter();
 	}
 }

@@ -2,12 +2,12 @@ using System;
 
 namespace NPG.States
 {
-	public abstract class StateMachine
+	public abstract class StateMachine : IUpdatable, IDisposable
 	{
 		protected abstract IStateFactory Factory { get; }
 
-		private IUpdatable _currentUpdatableState;
-		private IExitState _currentExitState;
+		private IUpdatable _currentUpdatable;
+		private IExitable _currentExitable;
 		private Type _currentType;
 
 		public TState Enter<TState>() where TState : class, IState
@@ -17,7 +17,7 @@ namespace NPG.States
 				return null;
 			}
 
-			state.OnEnter();
+			state.Enter();
 			return state;
 		}
 
@@ -28,13 +28,13 @@ namespace NPG.States
 				return null;
 			}
 
-			state.OnEnter(payload);
+			state.Enter(payload);
 			return state;
 		}
 
-		public bool IsActive(IExitState state)
+		public bool IsActive(IExitable state)
 		{
-			return _currentExitState == state;
+			return _currentExitable == state;
 		}
 
 		public bool IsActive(Type stateType)
@@ -44,14 +44,22 @@ namespace NPG.States
 
 		public void Update()
 		{
-			_currentUpdatableState?.Update();
+			_currentUpdatable?.Update();
 		}
 		
-		protected virtual void StateChanged(IExitState oldState, IExitState newState)
+		public virtual void Dispose()
+		{
+			_currentExitable?.Exit();
+			_currentExitable = null;
+			_currentUpdatable = null;
+			_currentType = null;
+		}
+		
+		protected virtual void StateChanged(IExitable oldState, IExitable newState)
 		{
 		}
 
-		private bool ChangeState<TState>(out TState state) where TState : class, IExitState
+		private bool ChangeState<TState>(out TState state) where TState : class, IExitable
 		{
 			var type = typeof(TState);
 			if (IsActive(type))
@@ -60,15 +68,15 @@ namespace NPG.States
 				return false;
 			}
 
-			_currentExitState?.OnExit();
+			_currentExitable?.Exit();
 			
 			state = Factory.GetState<TState>();
 			
-			_currentUpdatableState = state as IUpdatable;
+			_currentUpdatable = state as IUpdatable;
 
-			StateChanged(_currentExitState, state);
+			StateChanged(_currentExitable, state);
 
-			_currentExitState = state;
+			_currentExitable = state;
 			_currentType = type;
 			return true;
 		}

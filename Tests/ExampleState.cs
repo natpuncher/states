@@ -5,11 +5,11 @@ namespace Tests
 {
 	public class ExampleState : IState, IUpdatable
 	{
-		public void OnExit()
+		public void Exit()
 		{
 		}
 
-		public void OnEnter()
+		public void Enter()
 		{
 		}
 
