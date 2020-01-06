@@ -4,11 +4,12 @@ namespace NPG.States
 {
 	public abstract class StateMachine<TBaseState> : IUpdatable, IDisposable
 	{
-		private readonly IStateFactory _factory;
+		protected Type _currentType;
 
+		private readonly IStateFactory _factory;
+		
 		private IUpdatable _currentUpdatable;
 		private IExitable _currentExitable;
-		private Type _currentType;
 
 		protected StateMachine(IStateFactory factory)
 		{
