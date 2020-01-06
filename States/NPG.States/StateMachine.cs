@@ -2,15 +2,20 @@ using System;
 
 namespace NPG.States
 {
-	public abstract class StateMachine : IUpdatable, IDisposable
+	public abstract class StateMachine<TBaseState> : IUpdatable, IDisposable
 	{
-		protected abstract IStateFactory Factory { get; }
+		private readonly IStateFactory _factory;
 
 		private IUpdatable _currentUpdatable;
 		private IExitable _currentExitable;
 		private Type _currentType;
 
-		public TState Enter<TState>() where TState : class, IState
+		protected StateMachine(IStateFactory factory)
+		{
+			_factory = factory;
+		}
+
+		public TState Enter<TState>() where TState : class, TBaseState, IState
 		{
 			if (!ChangeState(out TState state))
 			{
@@ -21,7 +26,7 @@ namespace NPG.States
 			return state;
 		}
 
-		public TState Enter<TState, TPayload>(TPayload payload) where TState : class, IPayloadedState<TPayload>
+		public TState Enter<TState, TPayload>(TPayload payload) where TState : class, TBaseState, IPayloadedState<TPayload>
 		{
 			if (!ChangeState(out TState state))
 			{
@@ -70,7 +75,7 @@ namespace NPG.States
 
 			_currentExitable?.Exit();
 			
-			state = Factory.GetState<TState>();
+			state = _factory.GetState<TState>();
 			
 			_currentUpdatable = state as IUpdatable;
 

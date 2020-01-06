@@ -3,7 +3,7 @@ using NPG.States;
 
 namespace Tests
 {
-	public class ExampleState : IState, IUpdatable
+	public class ExampleState : IGameState, IState, IUpdatable
 	{
 		public void Exit()
 		{

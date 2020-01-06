@@ -45,9 +45,11 @@
     <Compile Include="ExamplePayloadedState.cs" />
     <Compile Include="ExampleState.cs" />
     <Compile Include="ExampleStateFactory.cs" />
-    <Compile Include="ExampleStateMachine.cs" />
+    <Compile Include="GameStateMachine.cs" />
+    <Compile Include="IGameState.cs" />
     <Compile Include="Tests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WrongPayloadedState.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\States\States.csproj">
