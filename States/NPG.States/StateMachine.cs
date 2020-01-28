@@ -2,20 +2,21 @@ using System;
 
 namespace NPG.States
 {
-	public abstract class StateMachine
+	public abstract class StateMachine : IUpdatable
 	{
+		public Type ActiveStateType => _currentStateInfo?.StateType;
+		
 		protected abstract IStateFactory Factory { get; }
 
-		private IUpdatable _currentUpdatableState;
-		private IExitState _currentExitState;
-		private Type _currentType;
+		private IStateInfo _currentStateInfo;
+		private IStateInfo _lastStateInfo;
 
 		public TState Enter<TState>() where TState : class, IState
 		{
-			if (!ChangeState(out TState state))
-			{
-				return null;
-			}
+			ChangeState(out TState state);
+			
+			_lastStateInfo = _currentStateInfo;
+			_currentStateInfo = new StateInfo<TState>(this, state);
 
 			state.OnEnter();
 			return state;
@@ -23,54 +24,42 @@ namespace NPG.States
 
 		public TState Enter<TState, TPayload>(TPayload payload) where TState : class, IPayloadedState<TPayload>
 		{
-			if (!ChangeState(out TState state))
-			{
-				return null;
-			}
-
+			ChangeState(out TState state);
+			
+			_lastStateInfo = _currentStateInfo;
+			_currentStateInfo = new PayloadedStateInfo<TState, TPayload>(this, state, payload);
+			
 			state.OnEnter(payload);
 			return state;
 		}
 
-		public bool IsActive(IExitState state)
+		public bool Back()
 		{
-			return _currentExitState == state;
-		}
-
-		public bool IsActive(Type stateType)
-		{
-			return _currentType == stateType;
-		}
-
-		public void Update()
-		{
-			_currentUpdatableState?.Update();
-		}
-		
-		protected virtual void StateChanged(IExitState oldState, IExitState newState)
-		{
-		}
-
-		private bool ChangeState<TState>(out TState state) where TState : class, IExitState
-		{
-			var type = typeof(TState);
-			if (IsActive(type))
+			if (_lastStateInfo == null)
 			{
-				state = null;
 				return false;
 			}
+			
+			_lastStateInfo.Enter();
+			return true;
+		}
+		
+		public void Update()
+		{
+			_currentStateInfo?.Update();
+		}
+		
+		protected virtual void StateChanged(Type oldState, Type newState)
+		{
+		}
 
-			_currentExitState?.OnExit();
+		private void ChangeState<TState>(out TState state) where TState : class, IExitState
+		{
+			_currentStateInfo?.Exit();
 			
 			state = Factory.GetState<TState>();
 			
-			_currentUpdatableState = state as IUpdatable;
-
-			StateChanged(_currentExitState, state);
-
-			_currentExitState = state;
-			_currentType = type;
-			return true;
+			StateChanged(ActiveStateType, typeof(TState));
 		}
 	}
 }
