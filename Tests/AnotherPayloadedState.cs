@@ -2,7 +2,7 @@ using NPG.States;
 
 namespace Tests
 {
-	public class WrongPayloadedState : IPayloadedState<string>
+	public class AnotherPayloadedState : IAnotherState, IPayloadedState<string>
 	{
 		public void Enter(string payload)
 		{

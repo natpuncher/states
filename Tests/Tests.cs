@@ -15,7 +15,7 @@ namespace Tests
 			
 			Assert.IsTrue(stateMachine.ActiveStateType == typeof(ExampleState));
 
-			// stateMachine.Enter<WrongPayloadedState, string>("can't do this");
+			// stateMachine.Enter<AnotherPayloadedState, string>("a state of another state machine");
 			var payloadedState = stateMachine.Enter<ExamplePayloadedState, int>(15);
 			
 			stateMachine.Update();
