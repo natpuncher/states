@@ -6,7 +6,7 @@ namespace NPG.States
 	{
 		public abstract Type StateType { get; }
 		
-		private IExitState _exitState;
+		private IExitable _exitState;
 		private IUpdatable _updatable;
 		
 		public abstract void Enter();
@@ -18,10 +18,10 @@ namespace NPG.States
 
 		public void Exit()
 		{
-			_exitState?.OnExit();
+			_exitState?.Exit();
 		}
 
-		protected void Initialize(IExitState state)
+		protected void Initialize(IExitable state)
 		{
 			_exitState = state;
 			_updatable = state as IUpdatable;

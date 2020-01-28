@@ -35,7 +35,7 @@
     <Compile Include="NPG.States\AbstractStateInfo.cs" />
     <Compile Include="NPG.States\IStateInfo.cs" />
     <Compile Include="NPG.States\IPayloadedState.cs" />
-    <Compile Include="NPG.States\IExitState.cs" />
+    <Compile Include="NPG.States\IExitable.cs" />
     <Compile Include="NPG.States\IStateFactory.cs" />
     <Compile Include="NPG.States\IState.cs" />
     <Compile Include="NPG.States\IUpdatable.cs" />

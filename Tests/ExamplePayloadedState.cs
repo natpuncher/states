@@ -2,16 +2,16 @@ using NPG.States;
 
 namespace Tests
 {
-	public class ExamplePayloadedState : IPayloadedState<int>
+	public class ExamplePayloadedState : IGameState, IPayloadedState<int>
 	{
 		public int Payload { get; private set; }
 		
-		public void OnEnter(int payload)
+		public void Enter(int payload)
 		{
 			Payload = payload;
 		}
 
-		public void OnExit()
+		public void Exit()
 		{
 		}
 	}

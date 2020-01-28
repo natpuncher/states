@@ -3,13 +3,13 @@ using NPG.States;
 
 namespace Tests
 {
-	public class ExampleState : IState, IUpdatable
+	public class ExampleState : IGameState, IState, IUpdatable
 	{
-		public void OnExit()
+		public void Exit()
 		{
 		}
 
-		public void OnEnter()
+		public void Enter()
 		{
 		}
 

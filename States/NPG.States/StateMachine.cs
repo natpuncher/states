@@ -2,7 +2,7 @@ using System;
 
 namespace NPG.States
 {
-	public abstract class StateMachine : IUpdatable, IDisposable
+	public abstract class StateMachine<TBaseState> : IUpdatable, IDisposable
 	{
 		public Type ActiveStateType => _currentStateInfo?.StateType;
 
@@ -16,25 +16,25 @@ namespace NPG.States
 			_stateFactory = stateFactory;
 		}
 
-		public TState Enter<TState>() where TState : class, IState
+		public TState Enter<TState>() where TState : class, TBaseState, IState
 		{
 			ChangeState(out TState state);
 			
 			_lastStateInfo = _currentStateInfo;
-			_currentStateInfo = new StateInfo<TState>(this, state);
+			_currentStateInfo = new StateInfo<TState, TBaseState>(this, state);
 
-			state.OnEnter();
+			state.Enter();
 			return state;
 		}
 
-		public TState Enter<TState, TPayload>(TPayload payload) where TState : class, IPayloadedState<TPayload>
+		public TState Enter<TState, TPayload>(TPayload payload) where TState : class, TBaseState, IPayloadedState<TPayload>
 		{
 			ChangeState(out TState state);
 			
 			_lastStateInfo = _currentStateInfo;
-			_currentStateInfo = new PayloadedStateInfo<TState, TPayload>(this, state, payload);
+			_currentStateInfo = new PayloadedStateInfo<TState, TBaseState, TPayload>(this, state, payload);
 			
-			state.OnEnter(payload);
+			state.Enter(payload);
 			return state;
 		}
 
@@ -61,11 +61,11 @@ namespace NPG.States
 			_lastStateInfo = null;
 		}
 		
-		protected virtual void StateChanged(Type oldState, Type newState)
+		protected virtual void StateChanged(Type oldStateType, Type newStateType)
 		{
 		}
 
-		private void ChangeState<TState>(out TState state) where TState : class, IExitState
+		private void ChangeState<TState>(out TState state) where TState : class, IExitable
 		{
 			_currentStateInfo?.Exit();
 			
