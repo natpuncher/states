@@ -2,14 +2,19 @@ using System;
 
 namespace NPG.States
 {
-	public abstract class StateMachine : IUpdatable
+	public abstract class StateMachine : IUpdatable, IDisposable
 	{
 		public Type ActiveStateType => _currentStateInfo?.StateType;
-		
-		protected abstract IStateFactory Factory { get; }
+
+		private readonly IStateFactory _stateFactory;
 
 		private IStateInfo _currentStateInfo;
 		private IStateInfo _lastStateInfo;
+
+		protected StateMachine(IStateFactory stateFactory)
+		{
+			_stateFactory = stateFactory;
+		}
 
 		public TState Enter<TState>() where TState : class, IState
 		{
@@ -49,6 +54,13 @@ namespace NPG.States
 			_currentStateInfo?.Update();
 		}
 		
+		public void Dispose()
+		{
+			_currentStateInfo?.Exit();
+			_currentStateInfo = null;
+			_lastStateInfo = null;
+		}
+		
 		protected virtual void StateChanged(Type oldState, Type newState)
 		{
 		}
@@ -57,7 +69,7 @@ namespace NPG.States
 		{
 			_currentStateInfo?.Exit();
 			
-			state = Factory.GetState<TState>();
+			state = _stateFactory.GetState<TState>();
 			
 			StateChanged(ActiveStateType, typeof(TState));
 		}

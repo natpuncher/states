@@ -4,19 +4,8 @@ namespace Tests
 {
 	public class ExampleStateMachine : StateMachine
 	{
-		protected override IStateFactory Factory
+		public ExampleStateMachine(IStateFactory stateFactory) : base(stateFactory)
 		{
-			get
-			{
-				if (_stateFactory == null)
-				{
-					_stateFactory = new ExampleStateFactory();
-				}
-
-				return _stateFactory;
-			}
 		}
-
-		private IStateFactory _stateFactory;
 	}
 }

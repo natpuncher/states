@@ -8,7 +8,7 @@ namespace Tests
 		[Test]
 		public void Test()
 		{
-			var stateMachine = new ExampleStateMachine();
+			var stateMachine = new ExampleStateMachine(new ExampleStateFactory());
 			stateMachine.Update();
 			stateMachine.Enter<ExampleState>();
 			stateMachine.Update();
