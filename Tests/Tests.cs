@@ -10,20 +10,26 @@ namespace Tests
 		{
 			var stateMachine = new GameStateMachine(new ExampleStateFactory());
 			stateMachine.Update();
-			var exampleState = stateMachine.Enter<ExampleState>();
+			stateMachine.Enter<ExampleState>();
 			stateMachine.Update();
 			
-			Assert.IsTrue(stateMachine.IsActive(exampleState));
-			Assert.IsTrue(stateMachine.IsActive(typeof(ExampleState)));
+			Assert.IsTrue(stateMachine.ActiveStateType == typeof(ExampleState));
 
-			// stateMachine.Enter<WrongPayloadedState, string>("can't do this");
+			// stateMachine.Enter<AnotherPayloadedState, string>("a state of another state machine");
 			var payloadedState = stateMachine.Enter<ExamplePayloadedState, int>(15);
 			
 			stateMachine.Update();
 			
 			Assert.AreEqual(15, payloadedState.Payload);
-			Assert.IsTrue(stateMachine.IsActive(payloadedState));
-			Assert.IsTrue(stateMachine.IsActive(typeof(ExamplePayloadedState)));
+			Assert.IsTrue(stateMachine.ActiveStateType == typeof(ExamplePayloadedState));
+
+			Assert.IsTrue(stateMachine.Back());
+			
+			Assert.IsTrue(stateMachine.ActiveStateType == typeof(ExampleState));
+			
+			Assert.IsTrue(stateMachine.Back());
+			
+			Assert.IsTrue(stateMachine.ActiveStateType == typeof(ExamplePayloadedState));
 		}
 	}
 }
