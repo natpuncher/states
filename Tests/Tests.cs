@@ -16,11 +16,11 @@ namespace Tests
 			Assert.IsTrue(stateMachine.ActiveStateType == typeof(ExampleState));
 
 			// stateMachine.Enter<AnotherPayloadedState, string>("a state of another state machine");
-			var payloadedState = stateMachine.Enter<ExamplePayloadedState, int>(15);
+			stateMachine.RequestEnter<ExamplePayloadedState, int>(15)
+				.Done(payloadedState => Assert.AreEqual(15, payloadedState.Payload));
 			
 			stateMachine.Update();
-			
-			Assert.AreEqual(15, payloadedState.Payload);
+		
 			Assert.IsTrue(stateMachine.ActiveStateType == typeof(ExamplePayloadedState));
 
 			Assert.IsTrue(stateMachine.Back());

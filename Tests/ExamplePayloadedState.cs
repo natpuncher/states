@@ -1,4 +1,5 @@
 using NPG.States;
+using RSG;
 
 namespace Tests
 {
@@ -11,8 +12,9 @@ namespace Tests
 			Payload = payload;
 		}
 
-		public void Exit()
+		public IPromise Exit()
 		{
+			return Promise.Resolved();
 		}
 	}
 }

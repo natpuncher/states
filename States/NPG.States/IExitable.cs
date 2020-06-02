@@ -1,7 +1,9 @@
+using RSG;
+
 namespace NPG.States
 {
 	public interface IExitable
 	{
-		void Exit();
+		IPromise Exit();
 	}
 }

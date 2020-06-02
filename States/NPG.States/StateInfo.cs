@@ -13,13 +13,15 @@ namespace NPG.States
 			_stateMachine = stateMachine;
 			StateType = typeof(TState);
 			
-			Initialize(state);
+			InitializeNewState(state);
 		}
 
 		public override void Enter()
 		{
-			var state = _stateMachine.Enter<TState>();
-			Initialize(state);
+			_stateMachine.RequestEnter<TState>()
+				.Done(InitializeNewState);
 		}
+		
+		public override string ToString() => $"{StateType.Name}";
 	}
 }

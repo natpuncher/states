@@ -1,4 +1,5 @@
 using System;
+using RSG;
 
 namespace NPG.States
 {
@@ -6,6 +7,6 @@ namespace NPG.States
 	{
 		Type StateType { get; }
 		void Enter();
-		void Exit();
+		IPromise Exit();
 	}
 }

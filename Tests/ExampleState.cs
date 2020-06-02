@@ -1,12 +1,14 @@
 using System;
 using NPG.States;
+using RSG;
 
 namespace Tests
 {
 	public class ExampleState : IGameState, IState, IUpdatable
 	{
-		public void Exit()
+		public IPromise Exit()
 		{
+			return Promise.Resolved();
 		}
 
 		public void Enter()

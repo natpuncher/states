@@ -1,4 +1,5 @@
 using System;
+using RSG;
 
 namespace NPG.States
 {
@@ -16,12 +17,10 @@ namespace NPG.States
 			_updatable?.Update();
 		}
 
-		public void Exit()
-		{
+		public IPromise Exit() => 
 			_exitState?.Exit();
-		}
 
-		protected void Initialize(IExitable state)
+		protected void InitializeNewState(IExitable state)
 		{
 			_exitState = state;
 			_updatable = state as IUpdatable;

@@ -15,13 +15,15 @@ namespace NPG.States
 			_payload = payload;
 			StateType = typeof(TState);
 			
-			Initialize(state);
+			InitializeNewState(state);
 		}
 
 		public override void Enter()
 		{
-			var state = _stateMachine.Enter<TState, TPayload>(_payload);
-			Initialize(state);
+			_stateMachine.RequestEnter<TState, TPayload>(_payload)
+				.Done(InitializeNewState);
 		}
+
+		public override string ToString() => $"{StateType.Name}";
 	}
 }

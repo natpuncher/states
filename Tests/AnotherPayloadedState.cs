@@ -1,4 +1,5 @@
 using NPG.States;
+using RSG;
 
 namespace Tests
 {
@@ -8,8 +9,9 @@ namespace Tests
 		{
 		}
 
-		public void Exit()
+		public IPromise Exit()
 		{
+			return Promise.Resolved();
 		}
 	}
 }
