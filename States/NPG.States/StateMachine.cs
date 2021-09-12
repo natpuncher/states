@@ -2,7 +2,7 @@ using System;
 
 namespace NPG.States
 {
-	public abstract class StateMachine<TBaseState> : IUpdatable, IDisposable
+	public abstract class StateMachine<TBaseState> : IUpdatable, IFixedUpdatable, IDisposable
 	{
 		public Type ActiveStateType => _currentStateInfo?.StateType;
 
@@ -52,6 +52,11 @@ namespace NPG.States
 		public void Update()
 		{
 			_currentStateInfo?.Update();
+		}
+		
+		public void FixedUpdate()
+		{
+			_currentStateInfo?.FixedUpdate();
 		}
 		
 		public void Dispose()

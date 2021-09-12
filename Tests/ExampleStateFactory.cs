@@ -9,7 +9,8 @@ namespace Tests
 		private readonly Dictionary<Type, IExitable> _states = new Dictionary<Type, IExitable>
 		{
 			{typeof(ExampleState), new ExampleState()},
-			{typeof(ExamplePayloadedState), new ExamplePayloadedState()}
+			{typeof(ExamplePayloadedState), new ExamplePayloadedState()},
+			{typeof(ExampleFixedUpdateState), new ExampleFixedUpdateState()}
 		};
 		
 		public T GetState<T>() where T : class, IExitable
