@@ -33,6 +33,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="NPG.States\AbstractStateInfo.cs" />
+    <Compile Include="NPG.States\IFixedUpdatable.cs" />
     <Compile Include="NPG.States\IStateInfo.cs" />
     <Compile Include="NPG.States\IPayloadedState.cs" />
     <Compile Include="NPG.States\IExitable.cs" />

@@ -42,6 +42,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ExampleFixedUpdateState.cs" />
     <Compile Include="ExamplePayloadedState.cs" />
     <Compile Include="ExampleState.cs" />
     <Compile Include="ExampleStateFactory.cs" />
