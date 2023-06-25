@@ -27,25 +27,24 @@ namespace npg.states.StateInfo
 		public IStateInfo<TStateType> CreateStateInfo<TPayloadedState, TPayload>(TPayloadedState state, TPayload payload) 
 			where TPayloadedState : class, TStateType, IPayloadedState<TPayload>
 		{
-			// var payloadType = typeof(TPayload);
-			// if (!_payloadedStateInfos.TryGetValue(payloadType, out var pool))
-			// {
-			// 	pool = new Stack<IStateInfo<TStateType>>();
-			// 	_payloadedStateInfos[payloadType] = pool;
-			// }
-			//
-			// if (pool.TryPop(out var result))
-			// {
-			// 	((PayloadedStateInfo<TPayloadedState, TStateType, TPayload>)result).Initialize(state, payload);
-			// }
-			// else
-			// {
+			var payloadType = typeof(TPayload);
+			if (!_payloadedStateInfos.TryGetValue(payloadType, out var pool))
+			{
+				pool = new Stack<IStateInfo<TStateType>>();
+				_payloadedStateInfos[payloadType] = pool;
+			}
+
+			if (pool.TryPop(out var result))
+			{
+				((PayloadedStateInfo<TPayloadedState, TStateType, TPayload>)result).Initialize(state, payload);
+			}
+			else
+			{
 				var stateInfo = new PayloadedStateInfo<TPayloadedState, TStateType, TPayload>();
 				stateInfo.Initialize(state, payload);
-				return stateInfo;
-				// result = stateInfo;
-				// }
-				// return result;
+				result = stateInfo;
+			}
+			return result;
 		}
 
 		public void ReturnStateInfo(IStateInfo<TStateType> stateInfo)
