@@ -1,6 +1,4 @@
-using NPG.States;
-
-namespace Tests
+namespace npg.states.tests
 {
 	public class GameStateMachine : StateMachine<IGameState>
 	{

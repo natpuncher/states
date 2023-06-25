@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
-using NPG.States;
 
-namespace Tests
+namespace npg.states.tests
 {
 	public class ExampleStateFactory : IStateFactory
 	{

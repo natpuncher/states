@@ -1,16 +1,17 @@
 using System;
 
-namespace NPG.States
+namespace npg.states
 {
-	public abstract class AbstractStateInfo : IStateInfo
+	internal abstract class BaseStateInfo<TStateType> : IStateInfo<TStateType>
 	{
-		public abstract Type StateType { get; }
+		public Type StateType => _exitState?.GetType();
+		public virtual Type PayloadType => null;
 
 		private IExitable _exitState;
 		private IUpdatable _updatable;
 		private IFixedUpdatable _fixedUpdatable;
 
-		public abstract void Enter();
+		public abstract void ReEnter(StateMachine<TStateType> stateMachine);
 
 		public void Update()
 		{
@@ -27,7 +28,14 @@ namespace NPG.States
 			_exitState?.Exit();
 		}
 
-		protected void Initialize(IExitable state)
+		public void Dispose()
+		{
+			_exitState = null;
+			_updatable = null;
+			_fixedUpdatable = null;
+		}
+
+		protected void InternalInitialize(IExitable state)
 		{
 			_exitState = state;
 			_updatable = state as IUpdatable;

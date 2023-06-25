@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 
-namespace Tests
+namespace npg.states.tests
 {
 	[TestFixture]
 	public class Tests
