@@ -35,13 +35,14 @@ namespace npg.states
 
 		public bool Back()
 		{
-			if (_backHistory == null || !_backHistory.TryGetLastState(out var lastState))
+			if (_backHistory == null || !_backHistory.TryGetLastState(out var previousStateInfo))
 			{
 				return false;
 			}
 
-			_stateInfoPool.ReturnStateInfo(_currentStateInfo);
-			lastState.ReEnter(this);
+			var currentStateInfo = _currentStateInfo;
+			previousStateInfo.ReEnter(this);
+			_stateInfoPool.ReturnStateInfo(currentStateInfo);
 			return true;
 		}
 
