@@ -6,8 +6,6 @@ namespace npg.states.StateInfo
 {
 	internal class BackHistory<TStateType> : IDisposable
 	{
-		public IStateInfo<TStateType>[] StateInfoHistory => _stateInfoHistory;
-
 		private readonly IStateInfo<TStateType>[] _stateInfoHistory;
 		private readonly StateInfoPool<TStateType> _stateInfoPool;
 		private readonly int _capacity;
