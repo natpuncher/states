@@ -1,6 +1,6 @@
 using System;
 
-namespace npg.states
+namespace npg.states.Infrastructure
 {
 	internal interface IStateInfo<TStateType> : IUpdatable, IFixedUpdatable, IDisposable
 	{

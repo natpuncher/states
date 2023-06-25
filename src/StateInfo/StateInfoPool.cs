@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
+using npg.states.Infrastructure;
 
-namespace npg.states
+namespace npg.states.StateInfo
 {
 	internal class StateInfoPool<TStateType> : IDisposable
 	{
@@ -26,28 +27,34 @@ namespace npg.states
 		public IStateInfo<TStateType> CreateStateInfo<TPayloadedState, TPayload>(TPayloadedState state, TPayload payload) 
 			where TPayloadedState : class, TStateType, IPayloadedState<TPayload>
 		{
-			var payloadType = typeof(TPayload);
-			if (!_payloadedStateInfos.TryGetValue(payloadType, out var pool))
-			{
-				pool = new Stack<IStateInfo<TStateType>>();
-				_payloadedStateInfos[payloadType] = pool;
-			}
-
-			if (pool.TryPop(out var result))
-			{
-				((PayloadedStateInfo<TPayloadedState, TStateType, TPayload>)result).Initialize(state, payload);
-			}
-			else
-			{
+			// var payloadType = typeof(TPayload);
+			// if (!_payloadedStateInfos.TryGetValue(payloadType, out var pool))
+			// {
+			// 	pool = new Stack<IStateInfo<TStateType>>();
+			// 	_payloadedStateInfos[payloadType] = pool;
+			// }
+			//
+			// if (pool.TryPop(out var result))
+			// {
+			// 	((PayloadedStateInfo<TPayloadedState, TStateType, TPayload>)result).Initialize(state, payload);
+			// }
+			// else
+			// {
 				var stateInfo = new PayloadedStateInfo<TPayloadedState, TStateType, TPayload>();
 				stateInfo.Initialize(state, payload);
-				result = stateInfo;
-			}
-			return result;
+				return stateInfo;
+				// result = stateInfo;
+				// }
+				// return result;
 		}
 
 		public void ReturnStateInfo(IStateInfo<TStateType> stateInfo)
 		{
+			if (stateInfo == null)
+			{
+				return;
+			}
+			
 			if (stateInfo.PayloadType != null)
 			{
 				ReturnPayloadedStateInfo(stateInfo);

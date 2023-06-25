@@ -1,3 +1,5 @@
+using npg.states.Infrastructure;
+
 namespace npg.states.tests
 {
 	public class ExampleFixedUpdateState : IGameState, IState, IFixedUpdatable

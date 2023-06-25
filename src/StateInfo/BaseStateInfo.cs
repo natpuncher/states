@@ -1,6 +1,7 @@
 using System;
+using npg.states.Infrastructure;
 
-namespace npg.states
+namespace npg.states.StateInfo
 {
 	internal abstract class BaseStateInfo<TStateType> : IStateInfo<TStateType>
 	{

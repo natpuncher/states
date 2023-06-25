@@ -1,6 +1,7 @@
 using System;
+using npg.states.Infrastructure;
 
-namespace npg.states
+namespace npg.states.StateInfo
 {
 	internal class PayloadedStateInfo<TState, TStateType, TPayload> : BaseStateInfo<TStateType> 
 		where TState : class, TStateType, IPayloadedState<TPayload>
@@ -16,7 +17,7 @@ namespace npg.states
 
 		public override void ReEnter(StateMachine<TStateType> stateMachine)
 		{
-			stateMachine.Enter<TState, TPayload>(_payload);
+			stateMachine.InternalEnter<TState, TPayload>(_payload, false);
 		}
 	}
 }

@@ -1,4 +1,4 @@
-namespace npg.states
+namespace npg.states.Infrastructure
 {
 	public interface IPayloadedState<TPayload> : IExitable
 	{

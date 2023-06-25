@@ -1,4 +1,5 @@
 using System;
+using npg.states.Infrastructure;
 
 namespace npg.states.tests
 {

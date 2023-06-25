@@ -1,21 +1,23 @@
 using System;
+using npg.states.Infrastructure;
 using UnityEngine;
 
-namespace npg.states
+namespace npg.states.StateInfo
 {
 	internal class BackHistory<TStateType> : IDisposable
 	{
 		public IStateInfo<TStateType>[] StateInfoHistory => _stateInfoHistory;
-		
-		private readonly int _capacity;
-		private readonly IStateInfo<TStateType>[] _stateInfoHistory;
 
+		private readonly IStateInfo<TStateType>[] _stateInfoHistory;
+		private readonly StateInfoPool<TStateType> _stateInfoPool;
+		private readonly int _capacity;
 
 		private int _current;
 		private int _historyCount;
 
-		public BackHistory(int capacity)
+		public BackHistory(StateInfoPool<TStateType> stateInfoPool, int capacity)
 		{
+			_stateInfoPool = stateInfoPool;
 			_capacity = capacity;
 			_stateInfoHistory = new IStateInfo<TStateType>[capacity];
 		}
@@ -34,10 +36,10 @@ namespace npg.states
 				state = default;
 				return false;
 			}
-			
+
 			_current = (_current + _capacity - 1) % _capacity;
-			state = _stateInfoHistory[_current];
 			_historyCount--;
+			state = _stateInfoHistory[_current];
 			return true;
 		}
 
@@ -45,6 +47,7 @@ namespace npg.states
 		{
 			for (var i = 0; i < _stateInfoHistory.Length; i++)
 			{
+				_stateInfoPool.ReturnStateInfo(_stateInfoHistory[i]);
 				_stateInfoHistory[i] = null;
 			}
 			_current = 0;
