@@ -7,7 +7,7 @@ namespace npg.states
 {
 	public abstract class StateMachine<TStateType> : IUpdatable, IFixedUpdatable, IDisposable
 	{
-		public virtual int StateHistorySize => 1;
+		public virtual int BackHistorySize => 1;
 		
 		public Type ActiveStateType => _currentStateInfo?.StateType;
 		public event Action<Type, Type> OnStateChanged;
@@ -114,7 +114,7 @@ namespace npg.states
 		{
 			if (_backHistory == null)
 			{
-				_backHistory = new BackHistory<TStateType>(_stateInfoPool, StateHistorySize);
+				_backHistory = new BackHistory<TStateType>(_stateInfoPool, BackHistorySize);
 			}
 			
 			_backHistory.Add(currentStateInfo);
