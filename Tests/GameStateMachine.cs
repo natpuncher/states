@@ -1,6 +1,6 @@
-using NPG.States;
+using npg.states.Infrastructure;
 
-namespace Tests
+namespace npg.states.tests
 {
 	public class GameStateMachine : StateMachine<IGameState>
 	{

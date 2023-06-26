@@ -1,4 +1,4 @@
-namespace NPG.States
+namespace npg.states.Infrastructure
 {
 	public interface IFixedUpdatable
 	{
