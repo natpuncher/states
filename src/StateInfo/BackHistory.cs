@@ -6,32 +6,32 @@ namespace npg.states.StateInfo
 {
 	internal class BackHistory<TStateType> : IDisposable
 	{
-		private readonly IStateInfo<TStateType>[] _stateInfoHistory;
-		private readonly StateInfoPool<TStateType> _stateInfoPool;
+		private readonly IStateHandler<TStateType>[] _stateInfoHistory;
+		private readonly StateHandlerPool<TStateType> _stateHandlerPool;
 		private readonly int _capacity;
 
 		private int _current;
 		private int _historyCount;
 
-		public BackHistory(StateInfoPool<TStateType> stateInfoPool, int capacity)
+		public BackHistory(StateHandlerPool<TStateType> stateHandlerPool, int capacity)
 		{
-			_stateInfoPool = stateInfoPool;
+			_stateHandlerPool = stateHandlerPool;
 			_capacity = capacity;
-			_stateInfoHistory = new IStateInfo<TStateType>[capacity];
+			_stateInfoHistory = new IStateHandler<TStateType>[capacity];
 		}
 
-		public void Add(IStateInfo<TStateType> stateInfo)
+		public void Add(IStateHandler<TStateType> stateHandler)
 		{
 			if (_stateInfoHistory[_current] != null)
 			{
-				_stateInfoPool.ReturnStateInfo(_stateInfoHistory[_current]);
+				_stateHandlerPool.Return(_stateInfoHistory[_current]);
 			}
-			_stateInfoHistory[_current] = stateInfo;
+			_stateInfoHistory[_current] = stateHandler;
 			_current = (_current + 1) % _capacity;
 			_historyCount = Mathf.Min(_historyCount + 1, _capacity);
 		}
 
-		public bool TryGetLastState(out IStateInfo<TStateType> state)
+		public bool TryGetLastState(out IStateHandler<TStateType> state)
 		{
 			if (_historyCount <= 0)
 			{
@@ -49,7 +49,7 @@ namespace npg.states.StateInfo
 		{
 			for (var i = 0; i < _stateInfoHistory.Length; i++)
 			{
-				_stateInfoPool.ReturnStateInfo(_stateInfoHistory[i]);
+				_stateHandlerPool.Return(_stateInfoHistory[i]);
 				_stateInfoHistory[i] = null;
 			}
 			_current = 0;

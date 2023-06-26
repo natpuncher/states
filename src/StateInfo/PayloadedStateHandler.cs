@@ -3,10 +3,9 @@ using npg.states.Infrastructure;
 
 namespace npg.states.StateInfo
 {
-	internal class PayloadedStateInfo<TState, TStateType, TPayload> : BaseStateInfo<TStateType> 
+	internal class PayloadedStateHandler<TState, TStateType, TPayload> : BaseStateHandler<TStateType> 
 		where TState : class, TStateType, IPayloadedState<TPayload>
 	{
-		public override Type PayloadType => typeof(TPayload);
 		private TPayload _payload;
 		
 		public void Initialize(TState state, TPayload payload)

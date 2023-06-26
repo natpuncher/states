@@ -3,7 +3,7 @@ using npg.states.Infrastructure;
 
 namespace npg.states.StateInfo
 {
-	internal class StateInfo<TState, TStateType> : BaseStateInfo<TStateType> where TState : class, TStateType, IState
+	internal class StateHandler<TState, TStateType> : BaseStateHandler<TStateType> where TState : class, TStateType, IState
 	{
 		public void Initialize(TState state)
 		{
