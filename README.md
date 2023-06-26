@@ -7,16 +7,8 @@ states
 
 State machine for Unity that helps to create a clear game architecture.
 The conditions for transition are embedded within states to improve understanding of the state logic. 
-Supports nested state machines.
-
-GameState
-InitializeGameState, MetaGameState, CoreGameState
-
-MetaGameState
-...
-
-CoreGameState
-...
+Supports nested state machines. There are only one active state for each state machine,
+that means whenever a new state is entered, the previous one is exited.
 
 * [Installation](#installation)
 * [Setup](#setup)
@@ -41,7 +33,7 @@ CoreGameState
 * [States](#create-states)
 
 ### Implement State Factory
-First, the `IStateFactory` interface should be implemented. This implementation will provide instances of your states to the **StateMachine**.
+First, `IStateFactory` interface should be implemented. This implementation will provide instances of your states to the **StateMachine**.
 It could use a dependency injection or manage instances manually.
 
 **DI, recommended**
@@ -125,8 +117,8 @@ public class MyFirstGameState : IGameState, IState
 * [State changed](#state-changed-notifications)
 
 ### Enter state
+To enter a new state call `stateMachine.Enter<TState>()`. The previous active state will receive `Exit`. 
 ```c#
-var stateMachine = container.Resolve<GameStateMachine>();
 stateMachine.Enter<InitializeGameState>();
 ```
 
@@ -153,6 +145,7 @@ public class InitializeGameState : IGameState, IState
 ```
 
 ### Pass arguments
+To pass arguments to a state on enter implement `IPayloadedState<TPayloadType>` interface instead of `IState`.
 ```c#
 public class CoreGameState : IGameState, IPayloadedState<string>
 {
@@ -172,6 +165,7 @@ stateMachine.Enter<CoreGameState, string>(levelName);
 ```
 
 ### Nested state machines
+Nested state machines can be used to better control on a different layers of your game.
 ```c#
 public interface IMetaGameState
 {
@@ -240,13 +234,11 @@ public class HudMetaState : IMetaGameState, IState
 ```
 
 ### Update
-> IUpdatable<br>
-> ILateUpdatable<br>
-> IFixedUpdatable<br>
+Calls on active state only.
 
-```c#
-gameStateMachine.Update();
-```
+> IUpdatable -> stateMachine.Update()<br>
+> ILateUpdatable -> stateMachine.LateUpdate()<br>
+> IFixedUpdatable -> stateMachine.FixedUpdate()<br>
 
 ```c#
 public class CoreGameState : IGameState, IPayloadedState<string>, IFixedUpdatable
@@ -274,6 +266,10 @@ public class CoreGameState : IGameState, IPayloadedState<string>, IFixedUpdatabl
 ```
 
 ### Back
+It is possible to enter previous state by calling `stateMachine.Back()`. 
+It also provides right payloads for payloaded states.
+> Default back history buffer size is 1, that means it can do only one back transition.
+
 ```c#
 public class InfoDialogMetaState : IMetaGameState, IPayloadedState<string>
 {
@@ -306,6 +302,7 @@ public class InfoDialogMetaState : IMetaGameState, IPayloadedState<string>
 }
 ```
 
+Back history buffer size could be increased. 
 ```c#
 public class GameStateMachine : StateMachine<IGameState>
 {
@@ -318,11 +315,12 @@ public class GameStateMachine : StateMachine<IGameState>
 ```
 
 ### State changed notifications
-
+By default, **StateMachine** will logs every state transition.
 > [GameStateMachine]  -> InitializeGameState<br>
 > [GameStateMachine] InitializeGameState -> MetaGameState<br>
 > [MetaGameStateMachine]  -> HudMetaState<br>
 
+It can be changed or turned off by overriding `StateChanged` method in the **StateMachine** implementation.
 ```c#
 public class GameStateMachine : StateMachine<IGameState>
 {
@@ -336,6 +334,7 @@ public class GameStateMachine : StateMachine<IGameState>
 }
 ``` 
 
+State changed notifications could be also received from `stateMachine.OnStateChanged` event.
 ```c#
 public class MetaGameState : IGameState, IState
 {
