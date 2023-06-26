@@ -55,7 +55,15 @@ namespace npg.states.tests
 		[Test]
 		public void BackPreservePayloadTest()
 		{
+			var stateMachine = new TestGameStateMachine(new TestStateFactory());
 			
+			stateMachine.Enter<TestPayloadState1, string>("1");
+			var state2 = stateMachine.Enter<TestPayloadState1, string>("2");
+			stateMachine.Enter<TestPayloadState1, string>("3");
+			
+			stateMachine.Back();
+			Assert.IsTrue(state2.IsActive);
+			Assert.AreEqual("2", state2.Payload);
 		}
 	}
 }

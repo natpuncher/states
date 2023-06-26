@@ -4,7 +4,7 @@ using npg.states.Infrastructure;
 
 namespace npg.states.StateInfo
 {
-	internal class StateInfoPool<TStateType> : IDisposable
+	internal class StateHandlerPool<TStateType> : IDisposable
 	{
 		private readonly Dictionary<Type, Stack<IStateHandler<TStateType>>> _stateHandlers = 
 			new Dictionary<Type, Stack<IStateHandler<TStateType>>>();

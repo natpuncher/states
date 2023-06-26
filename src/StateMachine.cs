@@ -13,7 +13,7 @@ namespace npg.states
 		public event Action<Type, Type> OnStateChanged;
 
 		private readonly IStateFactory _stateFactory;
-		private readonly StateInfoPool<TStateType> _stateInfoPool = new StateInfoPool<TStateType>();
+		private readonly StateHandlerPool<TStateType> _stateHandlerPool = new StateHandlerPool<TStateType>();
 		private BackHistory<TStateType> _backHistory;
 
 		private IStateHandler<TStateType> _currentStateHandler;
@@ -41,7 +41,7 @@ namespace npg.states
 			}
 
 			var lastStateType = ActiveStateType;
-			_stateInfoPool.Return(_currentStateHandler);
+			_stateHandlerPool.Return(_currentStateHandler);
 			previousStateInfo.ReEnter(this, lastStateType);
 			return true;
 		}
@@ -77,7 +77,7 @@ namespace npg.states
 		internal TState InternalEnter<TState>(Type lastStateType, bool addToHistory = true) where TState : class, TStateType, IState
 		{
 			var state = ChangeState<TState>(addToHistory);
-			_currentStateHandler = _stateInfoPool.GetStateHandler(state);
+			_currentStateHandler = _stateHandlerPool.GetStateHandler(state);
 			NotifyStateChanged(lastStateType);
 			state.Enter();
 			return state;
@@ -87,7 +87,7 @@ namespace npg.states
 			where TState : class, TStateType, IPayloadedState<TPayload>
 		{
 			var state = ChangeState<TState>(addToHistory);
-			_currentStateHandler = _stateInfoPool.GetStateHandler(state, payload);
+			_currentStateHandler = _stateHandlerPool.GetStateHandler(state, payload);
 			NotifyStateChanged(lastStateType);
 			state.Enter(payload);
 			return state;
@@ -117,7 +117,7 @@ namespace npg.states
 		{
 			if (_backHistory == null)
 			{
-				_backHistory = new BackHistory<TStateType>(_stateInfoPool, BackHistorySize);
+				_backHistory = new BackHistory<TStateType>(_stateHandlerPool, BackHistorySize);
 			}
 			
 			_backHistory.Add(currentStateHandler);

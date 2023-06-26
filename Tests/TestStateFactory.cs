@@ -26,9 +26,12 @@ namespace npg.states.tests
 		}
 	}
 	
-	public class TestState1 : ITestGameState, IState
+	public class TestState1 : ITestGameState, IState, IUpdatable, ILateUpdatable, IFixedUpdatable
 	{
 		public bool IsActive { get; private set; }
+		public int UpdateCount { get; private set; }
+		public int LateUpdateCount { get; private set; }
+		public int FixedUpdateCount { get; private set; }
 		
 		public void Enter()
 		{
@@ -38,12 +41,33 @@ namespace npg.states.tests
 		public void Exit()
 		{
 			IsActive = false;
+			UpdateCount = 0;
+			LateUpdateCount = 0;
+			FixedUpdateCount = 0;
+		}
+
+		public void Update()
+		{
+			UpdateCount++;
+		}
+
+		public void LateUpdate()
+		{
+			LateUpdateCount++;
+		}
+
+		public void FixedUpdate()
+		{
+			FixedUpdateCount++;
 		}
 	}
 	
-	public class TestState2 : ITestGameState, IState
+	public class TestState2 : ITestGameState, IState, IUpdatable, ILateUpdatable, IFixedUpdatable
 	{
 		public bool IsActive { get; private set; }
+		public int UpdateCount { get; private set; }
+		public int LateUpdateCount { get; private set; }
+		public int FixedUpdateCount { get; private set; }
 		
 		public void Enter()
 		{
@@ -53,6 +77,24 @@ namespace npg.states.tests
 		public void Exit()
 		{
 			IsActive = false;
+			UpdateCount = 0;
+			LateUpdateCount = 0;
+			FixedUpdateCount = 0;
+		}
+
+		public void Update()
+		{
+			UpdateCount++;
+		}
+
+		public void LateUpdate()
+		{
+			LateUpdateCount++;
+		}
+
+		public void FixedUpdate()
+		{
+			FixedUpdateCount++;
 		}
 	}
 
