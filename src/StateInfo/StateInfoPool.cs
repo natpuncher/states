@@ -44,6 +44,7 @@ namespace npg.states.StateInfo
 				stateInfo.Initialize(state, payload);
 				result = stateInfo;
 			}
+
 			return result;
 		}
 

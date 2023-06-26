@@ -22,6 +22,10 @@ namespace npg.states.StateInfo
 
 		public void Add(IStateInfo<TStateType> stateInfo)
 		{
+			if (_stateInfoHistory[_current] != null)
+			{
+				_stateInfoPool.ReturnStateInfo(_stateInfoHistory[_current]);
+			}
 			_stateInfoHistory[_current] = stateInfo;
 			_current = (_current + 1) % _capacity;
 			_historyCount = Mathf.Min(_historyCount + 1, _capacity);

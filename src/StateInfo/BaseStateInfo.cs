@@ -12,7 +12,7 @@ namespace npg.states.StateInfo
 		private IUpdatable _updatable;
 		private IFixedUpdatable _fixedUpdatable;
 
-		public abstract void ReEnter(StateMachine<TStateType> stateMachine);
+		public abstract void ReEnter(StateMachine<TStateType> stateMachine, Type lastStateType);
 
 		public void Update()
 		{

@@ -6,7 +6,7 @@ namespace npg.states.Infrastructure
 	{
 		Type StateType { get; }
 		Type PayloadType { get; }
-		void ReEnter(StateMachine<TStateType> stateMachine);
+		void ReEnter(StateMachine<TStateType> stateMachine, Type lastStateType);
 		void Exit();
 	}
 }

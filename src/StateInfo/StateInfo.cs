@@ -1,3 +1,4 @@
+using System;
 using npg.states.Infrastructure;
 
 namespace npg.states.StateInfo
@@ -9,9 +10,9 @@ namespace npg.states.StateInfo
 			InternalInitialize(state);
 		}
 
-		public override void ReEnter(StateMachine<TStateType> stateMachine)
+		public override void ReEnter(StateMachine<TStateType> stateMachine, Type lastStateType)
 		{
-			stateMachine.InternalEnter<TState>(false);
+			stateMachine.InternalEnter<TState>(lastStateType, false);
 		}
 	}
 }

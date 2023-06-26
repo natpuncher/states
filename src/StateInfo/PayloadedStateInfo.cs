@@ -15,9 +15,9 @@ namespace npg.states.StateInfo
 			InternalInitialize(state);
 		}
 
-		public override void ReEnter(StateMachine<TStateType> stateMachine)
+		public override void ReEnter(StateMachine<TStateType> stateMachine, Type lastStateType)
 		{
-			stateMachine.InternalEnter<TState, TPayload>(_payload, false);
+			stateMachine.InternalEnter<TState, TPayload>(lastStateType, _payload, false);
 		}
 	}
 }

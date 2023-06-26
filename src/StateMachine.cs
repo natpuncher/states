@@ -25,12 +25,12 @@ namespace npg.states
 
 		public TState Enter<TState>() where TState : class, TStateType, IState
 		{
-			return InternalEnter<TState>();
+			return InternalEnter<TState>(ActiveStateType);
 		}
 
 		public TState Enter<TState, TPayload>(TPayload payload) where TState : class, TStateType, IPayloadedState<TPayload>
 		{
-			return InternalEnter<TState, TPayload>(payload);
+			return InternalEnter<TState, TPayload>(ActiveStateType, payload);
 		}
 
 		public bool Back()
@@ -40,9 +40,9 @@ namespace npg.states
 				return false;
 			}
 
-			var currentStateInfo = _currentStateInfo;
-			previousStateInfo.ReEnter(this);
-			_stateInfoPool.ReturnStateInfo(currentStateInfo);
+			var lastStateType = ActiveStateType;
+			_stateInfoPool.ReturnStateInfo(_currentStateInfo);
+			previousStateInfo.ReEnter(this, lastStateType);
 			return true;
 		}
 
@@ -69,9 +69,8 @@ namespace npg.states
 			_backHistory?.Dispose();
 		}
 
-		internal TState InternalEnter<TState>(bool addToHistory = true) where TState : class, TStateType, IState
+		internal TState InternalEnter<TState>(Type lastStateType, bool addToHistory = true) where TState : class, TStateType, IState
 		{
-			var lastStateType = ActiveStateType;
 			var state = ChangeState<TState>(addToHistory);
 			_currentStateInfo = _stateInfoPool.CreateStateInfo(state);
 			NotifyStateChanged(lastStateType);
@@ -79,10 +78,9 @@ namespace npg.states
 			return state;
 		}
 		
-		internal TState InternalEnter<TState, TPayload>(TPayload payload, bool addToHistory = true)
+		internal TState InternalEnter<TState, TPayload>(Type lastStateType, TPayload payload, bool addToHistory = true)
 			where TState : class, TStateType, IPayloadedState<TPayload>
 		{
-			var lastStateType = ActiveStateType;
 			var state = ChangeState<TState>(addToHistory);
 			_currentStateInfo = _stateInfoPool.CreateStateInfo(state, payload);
 			NotifyStateChanged(lastStateType);
