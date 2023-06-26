@@ -72,6 +72,8 @@ namespace npg.states
 			_currentStateHandler = null;
 
 			_backHistory?.Dispose();
+			
+			OnStateChanged = null;
 		}
 
 		internal TState InternalEnter<TState>(Type lastStateType, bool addToHistory = true) where TState : class, TStateType, IState
