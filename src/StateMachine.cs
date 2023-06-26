@@ -5,18 +5,18 @@ using UnityEngine;
 
 namespace npg.states
 {
-	public abstract class StateMachine<TStateType> : IUpdatable, IFixedUpdatable, IDisposable
+	public abstract class StateMachine<TStateType> : IUpdatable, ILateUpdatable, IFixedUpdatable, IDisposable
 	{
 		public virtual int BackHistorySize => 1;
 		
-		public Type ActiveStateType => _currentStateInfo?.StateType;
+		public Type ActiveStateType => _currentStateHandler?.StateType;
 		public event Action<Type, Type> OnStateChanged;
 
 		private readonly IStateFactory _stateFactory;
 		private readonly StateInfoPool<TStateType> _stateInfoPool = new StateInfoPool<TStateType>();
 		private BackHistory<TStateType> _backHistory;
 
-		private IStateInfo<TStateType> _currentStateInfo;
+		private IStateHandler<TStateType> _currentStateHandler;
 
 		protected StateMachine(IStateFactory stateFactory)
 		{
@@ -41,7 +41,7 @@ namespace npg.states
 			}
 
 			var lastStateType = ActiveStateType;
-			_stateInfoPool.ReturnStateInfo(_currentStateInfo);
+			_stateInfoPool.Return(_currentStateHandler);
 			previousStateInfo.ReEnter(this, lastStateType);
 			return true;
 		}
@@ -53,18 +53,23 @@ namespace npg.states
 
 		public void Update()
 		{
-			_currentStateInfo?.Update();
+			_currentStateHandler?.Update();
+		}
+
+		public void LateUpdate()
+		{
+			_currentStateHandler?.LateUpdate();
 		}
 
 		public void FixedUpdate()
 		{
-			_currentStateInfo?.FixedUpdate();
+			_currentStateHandler?.FixedUpdate();
 		}
 
 		public void Dispose()
 		{
-			_currentStateInfo?.Exit();
-			_currentStateInfo = null;
+			_currentStateHandler?.Exit();
+			_currentStateHandler = null;
 
 			_backHistory?.Dispose();
 		}
@@ -72,7 +77,7 @@ namespace npg.states
 		internal TState InternalEnter<TState>(Type lastStateType, bool addToHistory = true) where TState : class, TStateType, IState
 		{
 			var state = ChangeState<TState>(addToHistory);
-			_currentStateInfo = _stateInfoPool.CreateStateInfo(state);
+			_currentStateHandler = _stateInfoPool.GetStateHandler(state);
 			NotifyStateChanged(lastStateType);
 			state.Enter();
 			return state;
@@ -82,7 +87,7 @@ namespace npg.states
 			where TState : class, TStateType, IPayloadedState<TPayload>
 		{
 			var state = ChangeState<TState>(addToHistory);
-			_currentStateInfo = _stateInfoPool.CreateStateInfo(state, payload);
+			_currentStateHandler = _stateInfoPool.GetStateHandler(state, payload);
 			NotifyStateChanged(lastStateType);
 			state.Enter(payload);
 			return state;
@@ -90,12 +95,12 @@ namespace npg.states
 
 		private TState ChangeState<TState>(bool addToHistory = true) where TState : class, IExitable
 		{
-			if (_currentStateInfo != null)
+			if (_currentStateHandler != null)
 			{
-				_currentStateInfo.Exit();
+				_currentStateHandler.Exit();
 				if (addToHistory)
 				{
-					AddToHistory(_currentStateInfo);	
+					AddToHistory(_currentStateHandler);	
 				}
 			}
 
@@ -108,14 +113,14 @@ namespace npg.states
 			OnStateChanged?.Invoke(lastStateType, ActiveStateType);
 		}
 
-		private void AddToHistory(IStateInfo<TStateType> currentStateInfo)
+		private void AddToHistory(IStateHandler<TStateType> currentStateHandler)
 		{
 			if (_backHistory == null)
 			{
 				_backHistory = new BackHistory<TStateType>(_stateInfoPool, BackHistorySize);
 			}
 			
-			_backHistory.Add(currentStateInfo);
+			_backHistory.Add(currentStateHandler);
 		}
 
 		protected virtual void StateChanged(Type oldStateType, Type newStateType)

@@ -6,41 +6,49 @@ namespace npg.states.StateInfo
 {
 	internal class StateInfoPool<TStateType> : IDisposable
 	{
-		private Stack<IStateInfo<TStateType>> _stateInfos = new Stack<IStateInfo<TStateType>>();
-		private Dictionary<Type, Stack<IStateInfo<TStateType>>> _payloadedStateInfos = new Dictionary<Type, Stack<IStateInfo<TStateType>>>();
+		private readonly Dictionary<Type, Stack<IStateHandler<TStateType>>> _stateHandlers = 
+			new Dictionary<Type, Stack<IStateHandler<TStateType>>>();
 
-		public IStateInfo<TStateType> CreateStateInfo<TState>(TState state) where TState : class, TStateType, IState
+		public IStateHandler<TStateType> GetStateHandler<TState>(TState state) where TState : class, TStateType, IState
 		{
-			if (_stateInfos.TryPop(out var result))
+			var stateType = typeof(TState);
+			if (!_stateHandlers.TryGetValue(stateType, out var pool))
 			{
-				((StateInfo<TState, TStateType>)result).Initialize(state);
+				pool = new Stack<IStateHandler<TStateType>>();
+				_stateHandlers[stateType] = pool;
+			}
+			
+			if (pool.TryPop(out var result))
+			{
+				((StateHandler<TState, TStateType>)result).Initialize(state);
 			}
 			else
 			{
-				var stateInfo = new StateInfo<TState, TStateType>();
+				var stateInfo = new StateHandler<TState, TStateType>();
 				stateInfo.Initialize(state);
 				result = stateInfo;
 			}
+
 			return result;
 		}
 		
-		public IStateInfo<TStateType> CreateStateInfo<TPayloadedState, TPayload>(TPayloadedState state, TPayload payload) 
+		public IStateHandler<TStateType> GetStateHandler<TPayloadedState, TPayload>(TPayloadedState state, TPayload payload) 
 			where TPayloadedState : class, TStateType, IPayloadedState<TPayload>
 		{
-			var payloadType = typeof(TPayload);
-			if (!_payloadedStateInfos.TryGetValue(payloadType, out var pool))
+			var stateType = typeof(TPayloadedState);
+			if (!_stateHandlers.TryGetValue(stateType, out var pool))
 			{
-				pool = new Stack<IStateInfo<TStateType>>();
-				_payloadedStateInfos[payloadType] = pool;
+				pool = new Stack<IStateHandler<TStateType>>();
+				_stateHandlers[stateType] = pool;
 			}
 
 			if (pool.TryPop(out var result))
 			{
-				((PayloadedStateInfo<TPayloadedState, TStateType, TPayload>)result).Initialize(state, payload);
+				((PayloadedStateHandler<TPayloadedState, TStateType, TPayload>)result).Initialize(state, payload);
 			}
 			else
 			{
-				var stateInfo = new PayloadedStateInfo<TPayloadedState, TStateType, TPayload>();
+				var stateInfo = new PayloadedStateHandler<TPayloadedState, TStateType, TPayload>();
 				stateInfo.Initialize(state, payload);
 				result = stateInfo;
 			}
@@ -48,39 +56,26 @@ namespace npg.states.StateInfo
 			return result;
 		}
 
-		public void ReturnStateInfo(IStateInfo<TStateType> stateInfo)
+		public void Return(IStateHandler<TStateType> stateHandler)
 		{
-			if (stateInfo == null)
+			if (stateHandler == null)
 			{
 				return;
 			}
 			
-			if (stateInfo.PayloadType != null)
+			if (!_stateHandlers.TryGetValue(stateHandler.StateType, out var pool))
 			{
-				ReturnPayloadedStateInfo(stateInfo);
-				return;
+				pool = new Stack<IStateHandler<TStateType>>();
+				_stateHandlers[stateHandler.StateType] = pool;
 			}
 			
-			stateInfo.Dispose();
-			_stateInfos.Push(stateInfo);
-		}
-
-		private void ReturnPayloadedStateInfo(IStateInfo<TStateType> stateInfo)
-		{
-			stateInfo.Dispose();
-			if (!_payloadedStateInfos.TryGetValue(stateInfo.PayloadType, out var pool))
-			{
-				pool = new Stack<IStateInfo<TStateType>>();
-				_payloadedStateInfos[stateInfo.PayloadType] = pool;
-			}
-			
-			pool.Push(stateInfo);
+			stateHandler.Dispose();
+			pool.Push(stateHandler);
 		}
 
 		public void Dispose()
 		{
-			_stateInfos.Clear();
-			_payloadedStateInfos.Clear();
+			_stateHandlers.Clear();
 		}
 	}
 }
