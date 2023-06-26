@@ -36,7 +36,7 @@ that means whenever a new state is entered, the previous one is exited.
 First, `IStateFactory` interface should be implemented. This implementation will provide instances of your states to the **StateMachine**.
 It could use a dependency injection or manage instances manually.
 
-**DI, recommended**
+**[DI](https://github.com/natpuncher/bindlessdi), recommended**
 ```c#
 public class StateFactory : IStateFactory
 {
