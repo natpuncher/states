@@ -2,7 +2,7 @@
   "name": "com.npg.states",
   "displayName": "npg.states",
   "description": "State machine for Unity",
-  "version": "1.5",
+  "version": "1.5.0",
   "unity": "2019.3",
   "license": "MIT",
   "licensesUrl": "https://github.com/natpuncher/states/blob/master/LICENSE.md",
