@@ -1,0 +1,25 @@
+{
+  "name": "com.npg.states",
+  "displayName": "npg.states",
+  "description": "State machine for Unity",
+  "version": "1.5",
+  "unity": "2019.3",
+  "license": "MIT",
+  "licensesUrl": "https://github.com/natpuncher/states/blob/master/LICENSE.md",
+  "documentationUrl": "https://github.com/natpuncher/states/blob/master/README.md",
+  "changelogUrl": "https://github.com/natpuncher/states/releases",
+  "repository": {
+    "type": "git",
+    "url": "git+http://github.com/natpuncher/states.git"
+  },
+  "author": {
+    "name": "nat.puncher",
+    "email": "nat.puncher@gmail.com",
+    "url": "https://github.com/natpuncher"
+  },
+  "dependencies": {},
+  "keywords": [
+    "states",
+    "state machine"
+  ]
+}
